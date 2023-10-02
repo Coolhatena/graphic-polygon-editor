@@ -56,14 +56,14 @@ def drawLine(P0,P1,color,canvas):
 	x1=P1[0]
 	y1=P1[1]
 	if abs(P1[0]-P0[0])>abs(P1[1]-P0[1]):
-		#lineas horizontales
+		#Horizonal linex
 		if P0[0]>P1[0]:
 			(x0,y0), (x1,y1) = swap(P0,P1)
 		ys = interpolate(x0, y0, x1, y1)
 		for x in range(x0,x1+1):
 			drawPoint(x, ys[x - x0], color,canvas)
 	else:
-		#lineas verticales    
+		#Vertical lines   
 		if P0[1]>P1[1]:
 			(x0,y0), (x1,y1) = swap(P0,P1)
 		xs = interpolate(y0, x0, y1, x1)
@@ -210,14 +210,14 @@ def drawGradientPolygon(points, color, canvas, centroid = None):
 	if centroid is None:
 		cx=int(np.sum([point[0] for point in points])/k)
 		cy=int(np.sum([point[1] for point in points])/k)
-		puntoc=(cx,cy)
+		centralPoint=(cx,cy)
 	else:
 		x, y = canvas.size
-		puntoc = matrixToCartessian([(centroid[0], centroid[1])], x, y)[0]
+		centralPoint = matrixToCartessian([(centroid[0], centroid[1])], x, y)[0]
 
 
 	while i < k-1:
-		drawShadedTriangle(puntoc, points[i], points[i + 1], color, canvas)
+		drawShadedTriangle(centralPoint, points[i], points[i + 1], color, canvas)
 		i=i+1
 		
-	drawShadedTriangle(puntoc,points[i],points[0],color,canvas)
+	drawShadedTriangle(centralPoint,points[i],points[0],color,canvas)

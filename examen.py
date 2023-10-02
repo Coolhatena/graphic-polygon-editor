@@ -23,7 +23,7 @@ class ScrollableFrame(tk.Frame):
         super().__init__(container, *args, **kwargs)
         canvas = tk.Canvas(self)
         canvas.config(
-            width=container.master.ancho + 100, height=container.master.alto + 20
+            width=container.master.width + 100, height=container.master.height + 20
         )
 
         scrollbar = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
@@ -34,9 +34,7 @@ class ScrollableFrame(tk.Frame):
         )
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-
         canvas.configure(yscrollcommand=scrollbar.set)
-
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
@@ -53,40 +51,39 @@ class StartPage(tk.Frame):
         labelTextAncho.set("Ancho (En px):")
         tk.Label(self, textvariable=labelTextAncho).pack()
 
-        self.ancho = tk.StringVar(None)
-        self.ancho.set("300")
-        tk.Entry(self, textvariable=self.ancho, width=25).pack()
+        self.width = tk.StringVar(None)
+        self.width.set("300")
+        tk.Entry(self, textvariable=self.width, width=25).pack()
 
         labelTextAlto = tk.StringVar()
         labelTextAlto.set("Alto (En px):")
         tk.Label(self, textvariable=labelTextAlto).pack()
 
-        self.alto = tk.StringVar(None)
-        self.alto.set("300")
-        tk.Entry(self, textvariable=self.alto, width=25).pack()
+        self.height = tk.StringVar(None)
+        self.height.set("300")
+        tk.Entry(self, textvariable=self.height, width=25).pack()
 
-        # tk.Label(self, text="This is the start page").pack(side="top", fill="x", pady=10)
         tk.Button(
             self, text="Continuar", command=lambda: self.assertPoints(master)
         ).pack(pady=5)
 
     def assertPoints(self, master):
-        ancho = self.ancho.get()
-        alto = self.alto.get()
-        if ancho != "" and alto != "":
-            master.ancho = int(ancho)
-            master.alto = int(alto)
+        width = self.width.get()
+        height = self.height.get()
+        if width != "" and height != "":
+            master.width = int(width)
+            master.height = int(height)
             master.switch_frame(selectPoints)
 
 
 class selectPoints(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        alto = master.alto
-        ancho = master.ancho
+        height = master.height
+        width = master.width
         puntos = []
-        master.geometry(f"{ancho+50}x{alto+90}")
-        canva = Image.new("RGB", (ancho, alto), (255, 255, 255))
+        master.geometry(f"{width+50}x{height+90}")
+        canva = Image.new("RGB", (width, height), (255, 255, 255))
 
         tkpic = ImageTk.PhotoImage(canva)
         label = tk.Label(self, image=tkpic)
@@ -95,7 +92,7 @@ class selectPoints(tk.Frame):
 
         def callback(event):
             color = (0, 0, 0)
-            gl.pointAround(canva, event.x, event.y, (ancho, alto), color)
+            gl.pointAround(canva, event.x, event.y, (width, height), color)
             tkpic = ImageTk.PhotoImage(canva)
             label.config(image=tkpic)
             label.image = tkpic  # Save reference to image
@@ -120,21 +117,18 @@ class selectPoints(tk.Frame):
 class Polygon(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.geometry(f"{master.ancho+120}x{master.alto}")
-        canva = Image.new("RGB", (master.ancho, master.alto), (255, 255, 255))
+        master.geometry(f"{master.width+120}x{master.height}")
+        canva = Image.new("RGB", (master.width, master.height), (255, 255, 255))
         gl.drawPolygon(
-            gl.matrixToCartessian(master.points, master.ancho, master.alto),
+            gl.matrixToCartessian(master.points, master.width, master.height),
             (0, 0, 0),
             canva,
         )
-
         container = ScrollableFrame(self)
-
         tkpic = ImageTk.PhotoImage(canva)
         label = tk.Label(container.scrollable_frame, image=tkpic)
         label.image = tkpic  # Save reference to image
         label.pack()
-
         labelTextRed = tk.StringVar()
         labelTextRed.set("Rojo:")
         tk.Label(container.scrollable_frame, textvariable=labelTextRed).pack()
@@ -162,7 +156,7 @@ class Polygon(tk.Frame):
             orient=tk.HORIZONTAL,
         )
         green.pack()
-
+        
         labelTextBlue = tk.StringVar()
         labelTextBlue.set("Azul:")
         tk.Label(container.scrollable_frame, textvariable=labelTextBlue).pack()
@@ -190,7 +184,6 @@ class Polygon(tk.Frame):
                 int(red.get()), int(green.get()), int(blue.get())
             ),
         ).pack(pady=3)
-
         container.pack(side="left", fill="both", expand=True)
 
     def sendData(self, r, g, b):
@@ -201,10 +194,10 @@ class Polygon(tk.Frame):
 class gradientPolygon(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.geometry(f"{master.ancho+50}x{master.alto+50}")
-        canva = Image.new("RGB", (master.ancho, master.alto), (255, 255, 255))
+        master.geometry(f"{master.width+50}x{master.height+50}")
+        canva = Image.new("RGB", (master.width, master.height), (255, 255, 255))
         gl.drawGradientPolygon(
-            gl.matrixToCartessian(master.points, master.ancho, master.alto),
+            gl.matrixToCartessian(master.points, master.width, master.height),
             master.color,
             canva,
         )
@@ -216,9 +209,9 @@ class gradientPolygon(tk.Frame):
 
         def callback(event):
             centroid = (event.x, event.y)
-            canva = Image.new("RGB", (master.ancho, master.alto), (255, 255, 255))
+            canva = Image.new("RGB", (master.width, master.height), (255, 255, 255))
             gl.drawGradientPolygon(
-                gl.matrixToCartessian(master.points, master.ancho, master.alto),
+                gl.matrixToCartessian(master.points, master.width, master.height),
                 master.color,
                 canva,
                 centroid,
