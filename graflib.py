@@ -186,19 +186,11 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
 
 
 def drawPolygon(points, color, canvas):
-	if len(points) < 3:
-		print("No es un poligono")
-		return
-
 	for i in range(-1, len(points)-1):
 		drawLine(points[i], points[i+1], color, canvas)
 
 
 def drawFilledPolygon(points, color, canvas):
-	if len(points) < 3:
-		print("No es un poligono")
-		return
-
 	for i in range(1, len(points)-1):
 		drawFilledTriangle(points[0], points[i], points[i+1], color, canvas)
 	drawFilledTriangle(points[-1], points[-2], points[-3], color, canvas)
