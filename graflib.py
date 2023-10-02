@@ -158,7 +158,6 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
         h_left = h02
         x_right = x012
         h_right = h012
-
     else:
         x_left = x012
         h_left = h012
@@ -202,7 +201,6 @@ def drawGradientPolygon(points, color, canvas, centroid = None):
 	else:
 		x, y = canvas.size
 		centralPoint = matrixToCartessian([(centroid[0], centroid[1])], x, y)[0]
-
 
 	while i < k-1:
 		drawShadedTriangle(centralPoint, points[i], points[i + 1], color, canvas)
