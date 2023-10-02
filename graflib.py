@@ -41,6 +41,7 @@ def swap(P0,P1):
 def interpolate(i0,d0,i1,d1):
 	if i0 == i1:
 		return [d0 for i in range(i0,i1+1)]
+	
 	values = []
 	a = (d1 - d0) / (i1 - i0)
 	d = d0
@@ -59,6 +60,7 @@ def drawLine(P0,P1,color,canvas):
 		#Horizonal linex
 		if P0[0]>P1[0]:
 			(x0,y0), (x1,y1) = swap(P0,P1)
+
 		ys = interpolate(x0, y0, x1, y1)
 		for x in range(x0,x1+1):
 			drawPoint(x, ys[x - x0], color,canvas)
@@ -85,11 +87,9 @@ def drawFilledTriangle(P0, P1, P2, color, canvas):
 	x1, y1 = P1
 	x2, y2 = P2
 
-
 	x01 = interpolate(y0, x0, y1, x1)
 	x02 = interpolate(y0, x0, y2, x2)
 	x12 = interpolate(y1, x1, y2, x2)
-
 	x012 = x01 + x12
 
 	m = math.floor(len(x012) / 2)
@@ -109,7 +109,7 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
     h0=1
     h1=0
     h2=0
-    c=	P0
+    c = P0
     if P1[1] < P0[1]:
         P1, P0 = swap(P1, P0)
     if P2[1] < P0[1]:
@@ -149,7 +149,6 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
 
     # Concatenate the short sides
     x012 = x01 + x12
-
     h012 = h01 + h12
 
     # Determine which is left and which is right
@@ -157,13 +156,12 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
     if x02[m] < x012[m]:
         x_left = x02
         h_left = h02
-
         x_right = x012
         h_right = h012
+
     else:
         x_left = x012
         h_left = h012
-
         x_right = x02
         h_right = h02
 
@@ -171,10 +169,8 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
     for y in range(y0, y2):
         xl = round(x_left[y - y0])
         hl = h_left[y - y0]
-
         xr = round(x_right[y - y0])
         hr = h_right[y - y0]
-
         h_segment = interpolate(xl, hl, xr, hr)
 
         for x in range(xl, xr):
